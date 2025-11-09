@@ -61,26 +61,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void initializeBitmaps() {
-        try {
-            birdBitmap = BitmapFactory.decodeResource(getResources(), character.getCharacterImageResId());
-            pipeBitmap = BitmapFactory.decodeResource(getResources(), character.getObstacleImageResId());
-            
-            // Scale bitmaps appropriately
-            int birdSize = 150;
-            birdBitmap = Bitmap.createScaledBitmap(birdBitmap, birdSize, birdSize, true);
-            
-            int pipeWidth = 150;
-            pipeBitmap = Bitmap.createScaledBitmap(pipeBitmap, pipeWidth, 1000, true);
-        } catch (Exception e) {
-            // Create default bitmaps if resources are missing
-            birdBitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
-            birdBitmap.eraseColor(Color.parseColor("#FF6B9E"));
-            
-            pipeBitmap = Bitmap.createBitmap(150, 1000, Bitmap.Config.ARGB_8888);
-            pipeBitmap.eraseColor(Color.parseColor("#8B4513"));
+    try {
+        birdBitmap = BitmapFactory.decodeResource(getResources(), character.getCharacterImageResId());
+        if (birdBitmap == null) {
+            throw new Exception("Failed to decode bird bitmap");
         }
+        pipeBitmap = BitmapFactory.decodeResource(getResources(), character.getObstacleImageResId());
+        if (pipeBitmap == null) {
+            throw new Exception("Failed to decode pipe bitmap");
+        }
+        
+        int birdSize = 150;
+        birdBitmap = Bitmap.createScaledBitmap(birdBitmap, birdSize, birdSize, true);
+        
+        int pipeWidth = 150;
+        pipeBitmap = Bitmap.createScaledBitmap(pipeBitmap, pipeWidth, 1000, true);
+    } catch (Exception e) {
+        birdBitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(birdBitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.parseColor("#FF6B9E"));
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(75, 75, 75, paint);
+        
+        pipeBitmap = Bitmap.createBitmap(150, 1000, Bitmap.Config.ARGB_8888);
+        pipeBitmap.eraseColor(Color.parseColor("#8B4513"));
     }
-
+}
     private void initializeGame() {
         pipes = new ArrayList<>();
         // Bird position will be set when surface is created
