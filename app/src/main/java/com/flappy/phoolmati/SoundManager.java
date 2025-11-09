@@ -66,13 +66,20 @@ public class SoundManager {
         }
     }
 
-    public void stopBackgroundMusic() {
-        if (backgroundMusic != null) {
-            backgroundMusic.stop();
+   public void stopBackgroundMusic() {
+    if (backgroundMusic != null) {
+        try {
+            if (backgroundMusic.isPlaying()) {
+                backgroundMusic.stop();
+            }
             backgroundMusic.release();
+        } catch (Exception e) {
+            // Already released
+        } finally {
             backgroundMusic = null;
         }
     }
+}
 
     public void pauseBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isPlaying()) {
@@ -105,6 +112,7 @@ public class SoundManager {
     }
 
     public void release() {
+        stopBackgroundMusic();
         releaseSounds();
         if (soundPool != null) {
             soundPool.release();
