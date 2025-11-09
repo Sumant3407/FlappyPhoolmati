@@ -301,25 +301,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         soundManager.resumeBackgroundMusic();
     }
 
-    public void pause() {
+   public void pause() {
+    if (gameThread != null) {
         gameThread.setRunning(false);
-        soundManager.pauseBackgroundMusic();
     }
+    soundManager.pauseBackgroundMusic();
+}
 
-    public void resume() {
-        if (!gameThread.isRunning()) {
-            gameThread.setRunning(true);
+public void resume() {
+    if (gameThread != null && !gameThread.isRunning()) {
+        gameThread.setRunning(true);
+        try {
             gameThread = new GameThread(getHolder(), this);
             gameThread.start();
+        } catch (IllegalThreadStateException e) {
         }
+    }
+    if (soundManager != null) {
         soundManager.resumeBackgroundMusic();
     }
-
-    public void destroy() {
-        gameThread.setRunning(false);
-    }
-
-    // Bird class
+}
     private class Bird {
         private float x, y;
         private float velocity = 0;
