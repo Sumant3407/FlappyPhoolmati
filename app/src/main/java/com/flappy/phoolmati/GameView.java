@@ -202,16 +202,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private void generatePipe() {
-        if (screenHeight == 0) return; // Wait for surface to be created
-        Random random = new Random();
-        int minGapY = 150;
-        int maxGapY = screenHeight - PIPE_GAP - GROUND_HEIGHT - 150;
-        if (maxGapY < minGapY) maxGapY = minGapY + 100;
-        int gapY = random.nextInt(maxGapY - minGapY) + minGapY;
-        pipes.add(new Pipe(screenWidth, gapY, PIPE_GAP, pipeBitmap.getWidth(), screenHeight - GROUND_HEIGHT));
+   private void generatePipe() {
+    if (screenHeight == 0) return;
+    Random random = new Random();
+    int minGapY = 150;
+    int maxGapY = screenHeight - PIPE_GAP - GROUND_HEIGHT - 150;
+    
+    // Ensure valid range
+    if (maxGapY <= minGapY) {
+        maxGapY = minGapY + PIPE_GAP;
     }
-
+    
+    int gapY = random.nextInt(Math.max(1, maxGapY - minGapY)) + minGapY;
+    pipes.add(new Pipe(screenWidth, gapY, PIPE_GAP, pipeBitmap.getWidth(), screenHeight - GROUND_HEIGHT));
+}
     private void gameOver() {
         if (!gameOver) {
             gameOver = true;
