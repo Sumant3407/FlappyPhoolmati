@@ -59,22 +59,23 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (gameView != null) {
-            gameView.resume();
-        }
-        soundManager.resumeBackgroundMusic();
+protected void onPause() {
+    super.onPause();
+    if (gameView != null) {
+        gameView.pause();
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (gameView != null) {
-            gameView.destroy();
-        }
-        soundManager.stopBackgroundMusic();
-        soundManager.release();
+    if (soundManager != null) {
+        soundManager.pauseBackgroundMusic();
     }
 }
 
+@Override
+protected void onResume() {
+    super.onResume();
+    if (gameView != null) {
+        gameView.resume();
+    }
+    if (soundManager != null) {
+        soundManager.resumeBackgroundMusic();
+    }
+}
